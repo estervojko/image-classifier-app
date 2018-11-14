@@ -68,12 +68,7 @@ class App extends Component {
             (response) => {
             // do something with response
             console.log(response.outputs[0].data.concepts);
-            this.setState((state) => ({
-              results: [
-                ...state.results,
-                response.outputs[0].data.concepts,
-              ]
-            }));
+            this.setState({results: response.outputs[0].data.concepts});
           },
           function(err) {
             // there was an error
@@ -103,7 +98,8 @@ class App extends Component {
             <button>Submit</button>
           </form>
         </div>
-        <Result results={this.state.results} />
+        <Result results={this.state.results}
+                url={this.state.url}/>
       </div>
     );
   }
