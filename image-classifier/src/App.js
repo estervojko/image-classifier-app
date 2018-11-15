@@ -1,7 +1,12 @@
-// The JavaScript client works in both Node.js and the browser.
+
 import React, { Component } from 'react'
 import './App.css'
-import Result from './components/Result.js'
+import Navbar from './components/Navbar.js'
+import Search from './components/Search.js'
+import Predict from './components/Predict.js'
+
+
+// The JavaScript client works in both Node.js and the browser.
 // Require the client
 const Clarifai = require('clarifai');
 
@@ -12,7 +17,6 @@ const app = new Clarifai.App({
 });
 
 // predict the contents of an image by passing in a url
-
 class App extends Component {
   constructor(props){
     super(props);
@@ -23,13 +27,14 @@ class App extends Component {
       url : '',
       results: [],
       searchObjs: [],
+      currentView: '',
     }
 
     this.handleUpload = this.handleUpload.bind(this);
     this.handleURL = this.handleURL.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    // this.setState = this.setState.bind(this);
     this.handleMultiple = this.handleMultiple.bind(this);
+    this.setView = this.setView.bind(this);
   }
 
   handleUpload(e){
@@ -121,12 +126,29 @@ class App extends Component {
           // there was an error
         }
       );
-}
+    }
+
+    //renders the view
+    getView(){
+      switch(this.state.currentView){
+        case 'predict' : return <Predict handleUpload={this.handleUpload}
+                                         handleURL={this.handleURL}
+                                         handleSubmit={this.handleSubmit}
+                                         results={this.state.results}
+                                         url={this.state.url}/>
+        case 'search'  : return <Search  handleMultiple={this.handleMultiple}/>
+      }
+    }
+
+    setView(view){
+      this.setState({currentView: view});
+    }
+
   render(){
     return (
       <div className="App">
         <h1>Image Classifier App</h1>
-        <div className="file-upload">
+        {/* <div className="file-upload">
           <h3>Upload a file:</h3>
           <input type="file"
                  className="input"
@@ -143,16 +165,10 @@ class App extends Component {
             <button>Submit</button>
           </form>
         </div>
-        <div>
-          <div className="multiple-files">
-            <h3>Upload all your images</h3>
-            <input type="file"
-                   onChange={this.handleMultiple}
-                   multiple />
-          </div>
-        </div>
-        <Result results={this.state.results}
-                url={this.state.url}/>
+
+                */}
+        <Navbar setView={this.setView} />
+        {this.getView()}
       </div>
     );
   }
