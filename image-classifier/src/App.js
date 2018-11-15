@@ -99,10 +99,6 @@ class App extends Component {
       }
     });
 
-    if(this.state.loaded === true){
-      console.log(this.state.searchObjs);
-    }
-
     //
     // app.inputs.create( this.state.searchObjs ).then(
     //     function(response) {
