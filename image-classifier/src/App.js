@@ -88,15 +88,19 @@ class App extends Component {
     // console.log(files[0]);
     Array.from(files).forEach((file) => {
       const reader = new FileReader();
-      console.log(file);
+      // console.log(file);
       reader.readAsDataURL(file);
+      let obj;
       reader.onload = () => {
         let base64 = reader.result.substring(23);
         reader.abort();
-        let obj = {base64: base64};
-        this.setState((state) => ({searchObjs:[...state.searchObjs, obj]}));
+        obj = {base64: base64};
         // console.log(this.state.searchObjs);
       }
+      reader.onloadend = () => {
+        this.setState((state) => ({searchObjs:[...state.searchObjs, obj]}));
+      }
+
     });
 
     //
