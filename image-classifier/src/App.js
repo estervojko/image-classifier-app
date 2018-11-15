@@ -22,11 +22,14 @@ class App extends Component {
       },
       url : '',
       results: [],
+      searchObjs: [],
     }
+
     this.handleUpload = this.handleUpload.bind(this);
     this.handleURL = this.handleURL.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.setState = this.setState.bind(this);
+    // this.setState = this.setState.bind(this);
+    this.handleMultiple = this.handleMultiple.bind(this);
   }
 
   handleUpload(e){
@@ -40,6 +43,7 @@ class App extends Component {
           base64: base64,
         }
     }));
+
     console.log(this.state.base64);
     reader.abort();
     app.models.predict(Clarifai.GENERAL_MODEL, this.state.base64)
@@ -77,6 +81,47 @@ class App extends Component {
       )
   }
 
+  //handles multiple input files
+  handleMultiple(e){
+    console.log(e.target.files);
+    let files = e.target.files;
+    // console.log(files[0]);
+    Array.from(files).forEach((file) => {
+      const reader = new FileReader();
+      console.log(file);
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        let base64 = reader.result.substring(23);
+        reader.abort();
+        let obj = {base64: base64};
+        this.setState((state) => ({searchObjs:[...state.searchObjs, obj]}));
+        // console.log(this.state.searchObjs);
+      }
+    });
+
+    if(this.state.loaded === true){
+      console.log(this.state.searchObjs);
+    }
+
+    //
+    // app.inputs.create( this.state.searchObjs ).then(
+    //     function(response) {
+    //       console.log(1,response)
+    //     },
+    //     function(err) {
+    //       // there was an error
+    //     }
+    //   );
+
+      app.inputs.search({ concept: {name: 'document'} }).then(
+        function(response) {
+          console.log(2, response);
+        },
+        function(err) {
+          // there was an error
+        }
+      );
+}
   render(){
     return (
       <div className="App">
@@ -97,6 +142,14 @@ class App extends Component {
             <br></br>
             <button>Submit</button>
           </form>
+        </div>
+        <div>
+          <div className="multiple-files">
+            <h3>Upload all your images</h3>
+            <input type="file"
+                   onChange={this.handleMultiple}
+                   multiple />
+          </div>
         </div>
         <Result results={this.state.results}
                 url={this.state.url}/>
