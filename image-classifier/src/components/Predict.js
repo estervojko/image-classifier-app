@@ -1,14 +1,16 @@
 import React from 'react';
-import Result from './Result.js'
 
 export default function Predict(props){
   return(
     <div>
       <div className="file-upload">
         <h3>Upload a file:</h3>
-        <input type="file"
-               className="input"
-               onChange={props.handleUpload}/>
+        <form onSubmit={props.handleSubmitUpload}>
+          <input type="file"
+                 className="input"
+                 onChange={props.handleUpload}/>
+          <button>Submit</button>
+        </form>
       </div>
       <div className="url-link">
         <h3>Post a url link:</h3>
@@ -21,8 +23,6 @@ export default function Predict(props){
           <button>Submit</button>
         </form>
       </div>
-      <Result results={props.results}
-              url={props.url}/>
     </div>
   )
 }

@@ -1,9 +1,9 @@
-
 import React, { Component } from 'react'
 import './App.css'
 import Navbar from './components/Navbar.js'
 import Search from './components/Search.js'
 import Predict from './components/Predict.js'
+import PredictResult from './components/PredictResult.js'
 
 
 // The JavaScript client works in both Node.js and the browser.
@@ -27,14 +27,23 @@ class App extends Component {
       url : '',
       results: [],
       searchObjs: [],
+      searchText: '',
       currentView: '',
+      hits: '',
     }
 
     this.handleUpload = this.handleUpload.bind(this);
     this.handleURL = this.handleURL.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleMultiple = this.handleMultiple.bind(this);
+    this.handleSubmitUpload = this.handleSubmitUpload.bind(this);
+    this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
     this.setView = this.setView.bind(this);
+    this.resetState = this.resetState.bind(this);
+
+    //handlers for the Search page when you search pictures you've uploaded
+    this.searchImages = this.searchImages.bind(this);
+    this.handleInputSearch = this.handleInputSearch.bind(this);
   }
 
   handleUpload(e){
@@ -51,7 +60,13 @@ class App extends Component {
 
     console.log(this.state.base64);
     reader.abort();
-    app.models.predict(Clarifai.GENERAL_MODEL, this.state.base64)
+    }
+  }
+
+  async handleSubmitUpload(e){
+    e.preventDefault();
+    console.log("works")
+    await app.models.predict(Clarifai.GENERAL_MODEL, this.state.base64)
       .then(
              (response) => {
             // do something with response
@@ -63,13 +78,14 @@ class App extends Component {
             console.log(err);
           }
       )
-    }
+    this.setView('predict-result');
   }
 
   handleURL(e){
     this.setState({url: e.target.value })
   }
 
+  //submits the image url to the api
   handleSubmit(e){
     e.preventDefault();
     app.models.predict(Clarifai.GENERAL_MODEL, this.state.url)
@@ -83,49 +99,61 @@ class App extends Component {
             // there was an error
             console.log(err);
           }
-      )
+      );
+    this.setView('predict-result');
   }
 
   //handles multiple input files
   handleMultiple(e){
-    console.log(e.target.files);
     let files = e.target.files;
-    // console.log(files[0]);
+
     Array.from(files).forEach((file) => {
       const reader = new FileReader();
-      // console.log(file);
       reader.readAsDataURL(file);
       let obj;
       reader.onload = () => {
         let base64 = reader.result.substring(23);
         reader.abort();
         obj = {base64: base64};
-        // console.log(this.state.searchObjs);
       }
       reader.onloadend = () => {
         this.setState((state) => ({searchObjs:[...state.searchObjs, obj]}));
       }
-
     });
+    }
 
-    //
-    // app.inputs.create( this.state.searchObjs ).then(
-    //     function(response) {
-    //       console.log(1,response)
-    //     },
-    //     function(err) {
-    //       // there was an error
-    //     }
-    //   );
-
-      app.inputs.search({ concept: {name: 'document'} }).then(
-        function(response) {
-          console.log(2, response);
+    //searches by concept to the api
+    searchImages(e){
+      e.preventDefault();
+      app.inputs.search({ concept: {name: this.state.searchText} }).then(
+        (response) => {
+          console.log(2, response.hits);
+          this.setState({hits: response.hits[0].input.data.image.url});
         },
         function(err) {
           // there was an error
         }
       );
+
+
+    }
+
+    //makes the search input a controlled component
+    handleInputSearch(e){
+      this.setState({searchText: e.target.value});
+    }
+
+    //sends images to the api
+    handleSearchSubmit(e){
+      e.preventDefault();
+      app.inputs.create( this.state.searchObjs ).then(
+          function(response) {
+            console.log(1,response)
+          },
+          function(err) {
+            // there was an error
+          }
+        );
     }
 
     //renders the view
@@ -134,9 +162,19 @@ class App extends Component {
         case 'predict' : return <Predict handleUpload={this.handleUpload}
                                          handleURL={this.handleURL}
                                          handleSubmit={this.handleSubmit}
+                                         handleSubmitUpload={this.handleSubmitUpload}
                                          results={this.state.results}
                                          url={this.state.url}/>
-        case 'search'  : return <Search  handleMultiple={this.handleMultiple}/>
+        case 'search'  : return <Search  handleMultiple={this.handleMultiple}
+                                         handleSearchSubmit={this.handleSearchSubmit}
+                                         searchImages={this.searchImages}
+                                         handleInputSearch={this.handleInputSearch}
+                                         hits={this.state.hits}/>
+        case 'predict-result' : return <PredictResult results={this.state.results}
+                                                      url={this.state.url}
+                                                      setView={this.setView}
+                                                      resetState={this.resetState}
+                                                      />
       }
     }
 
@@ -144,29 +182,21 @@ class App extends Component {
       this.setState({currentView: view});
     }
 
+    //resets the state of result and url when you click back on Predict
+
+    resetState(){
+      this.setState({url: '',
+                     results: [],
+                     base64: {
+                       base64: ''
+                     }
+                   })
+    }
+
   render(){
     return (
       <div className="App">
         <h1>Image Classifier App</h1>
-        {/* <div className="file-upload">
-          <h3>Upload a file:</h3>
-          <input type="file"
-                 className="input"
-                 onChange={this.handleUpload}/>
-        </div>
-        <div className="url-link">
-          <h3>Post a url link:</h3>
-          <form onSubmit={this.handleSubmit}>
-            <input type="text"
-                   name="link"
-                   className="input"
-                   onChange={this.handleURL}/>
-            <br></br>
-            <button>Submit</button>
-          </form>
-        </div>
-
-                */}
         <Navbar setView={this.setView} />
         {this.getView()}
       </div>
