@@ -1,4 +1,5 @@
 import React from 'react';
+import TextField from '@material-ui/core/TextField';
 
 export default function Predict(props){
   return(
@@ -15,7 +16,7 @@ export default function Predict(props){
       <div className="url-link">
         <h3>Post a url link:</h3>
         <form onSubmit={props.handleSubmit}>
-          <input type="text"
+          <TextField type="text"
                  name="link"
                  className="input"
                  onChange={props.handleURL}/>

@@ -4,6 +4,7 @@ import Navbar from './components/Navbar.js'
 import Search from './components/Search.js'
 import Predict from './components/Predict.js'
 import PredictResult from './components/PredictResult.js'
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 
 
 // The JavaScript client works in both Node.js and the browser.
@@ -201,11 +202,13 @@ class App extends Component {
 
   render(){
     return (
-      <div className="App">
-        <h1>Image Classifier App</h1>
-        <Navbar setView={this.setView} />
-        {this.getView()}
-      </div>
+      <MuiThemeProvider>
+        <div className="App">
+          <h1>Image Classifier App</h1>
+          <Navbar setView={this.setView} />
+          {this.getView()}
+        </div>
+      </MuiThemeProvider>
     );
   }
 }

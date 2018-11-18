@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import TextField from '@material-ui/core/TextField';
+
 
 export default class Search extends Component{
   renderResults(){
@@ -27,14 +29,15 @@ export default class Search extends Component{
         <div>
           <div className="multiple-files">
             <h3>Upload all your images</h3>
-            <form onSubmit={this.props.handleSearchSubmit}>
-              <input type="file"
-                     onChange={this.props.handleMultiple}
-                     multiple />
-              <button>Submit for evaluation</button>
-            </form>
+              <form onSubmit={this.props.handleSearchSubmit}>
+                <input type="file"
+                       onChange={this.props.handleMultiple}
+                       multiple />
+                <button>Submit for evaluation</button>
+              </form>
+
             <form onSubmit={this.props.searchImages}>
-              <input type="text" onChange={this.props.handleInputSearch}/>
+              <TextField type="text" onChange={this.props.handleInputSearch}/>
               <button>Search</button>
             </form>
           </div>
