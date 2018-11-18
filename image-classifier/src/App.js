@@ -29,7 +29,8 @@ class App extends Component {
       searchObjs: [],
       searchText: '',
       currentView: '',
-      hits: '',
+      hits: [],
+      error: '',
     }
 
     this.handleUpload = this.handleUpload.bind(this);
@@ -117,7 +118,9 @@ class App extends Component {
         obj = {base64: base64};
       }
       reader.onloadend = () => {
-        this.setState((state) => ({searchObjs:[...state.searchObjs, obj]}));
+        this.setState((state) => {
+          console.log(this.state.searchObjs)
+          return {searchObjs:[...state.searchObjs, obj]}});
       }
     });
     }
@@ -128,10 +131,12 @@ class App extends Component {
       app.inputs.search({ concept: {name: this.state.searchText} }).then(
         (response) => {
           console.log(2, response.hits);
-          this.setState({hits: response.hits[0].input.data.image.url});
+          this.setState({hits: response.hits,
+                         error: ''});
         },
-        function(err) {
-          // there was an error
+        (err) => {
+          console.log(err.statusText);
+            this.setState({error: err.statusText});
         }
       );
 
@@ -169,7 +174,8 @@ class App extends Component {
                                          handleSearchSubmit={this.handleSearchSubmit}
                                          searchImages={this.searchImages}
                                          handleInputSearch={this.handleInputSearch}
-                                         hits={this.state.hits}/>
+                                         hits={this.state.hits}
+                                         error={this.state.error}/>
         case 'predict-result' : return <PredictResult results={this.state.results}
                                                       url={this.state.url}
                                                       setView={this.setView}

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function PredictResult(props){
+function PredictResult(props){
     return (
       <div>
         <button onClick={() => { props.setView('predict');
@@ -16,3 +16,5 @@ export default function PredictResult(props){
       </div>
    )
 }
+
+export default PredictResult;
