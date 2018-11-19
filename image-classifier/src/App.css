@@ -1,9 +1,17 @@
 .App {
   display: grid;
   justify-content: center;
+  padding: 50px;
+  background-image: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);
+  height: 100vh;
 }
 
 .input{
   width: 200px;
   height: 20px;
+}
+
+.predict-image{
+  width: 500px;
+  height: auto;
 }

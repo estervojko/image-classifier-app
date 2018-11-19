@@ -1,21 +1,24 @@
 import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
-
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
 
 export default class Search extends Component{
   renderResults(){
     if(this.props.error !== 'Bad Request'){
       return(
         <div>
-          {
-            this.props.hits.map((hit) => {
-              console.log(hit.input.data.image.url)
-              return (
-                <div key={hit.input.data.image.url}>
-                  <img src={hit.input.data.image.url}/>
-                </div>)
-              })
-          }
+          <GridList cols={3}>
+            {
+              this.props.hits.map((hit) => {
+                console.log(hit.input.data.image.url)
+                return (
+                  <GridListTile key={hit.input.data.image.url}>
+                    <img src={hit.input.data.image.url}/>
+                  </GridListTile>)
+                })
+            }
+          </GridList>
         </div>
       )
     }
