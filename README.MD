@@ -1,4 +1,7 @@
 
+Link to a video describing the app:
+https://youtu.be/6-_hCNPTRf0
+
 Basic Description
 
 The user selects a picture from his file-system and uploads it. On the click of a button a request is sent to
