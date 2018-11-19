@@ -1,4 +1,7 @@
 
+Link to the deployed app:
+berserk-food.surge.sh
+
 Link to a video describing the app:
 https://youtu.be/6-_hCNPTRf0
 
