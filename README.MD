@@ -7,6 +7,7 @@ http://berserk-food.surge.sh
 ### Basic Description
 
 **How to use**
+
 The app has 2 tabs, Predict and Search. In Predict, there's 2 options. You can either choose to upload a file from your file system or post a url link. After you do that, click submit. Then the Clarifai API (https://clarifai.com/), responds with the concepts it recognized in the image and the probabilities.
 
 In the Search tab, you can upload multiple files, up to 128 images per API call. The API then tags the images with keywords depending on what it recognizes in the picture, and you can search by keyword. *I've already uploaded around 100 images to the service, and you can test the app by searching for keywords like: "park",
@@ -14,6 +15,21 @@ In the Search tab, you can upload multiple files, up to 128 images per API call.
 
 ### Wireframes
 
+**Starting screen**
+
+![alt text](https://github.com/estervojko/image-classifier-app/blob/master/image-classifier/wireframes/wireframe1.jpg?raw=true)
+
+**Results from Predict**
+
+![alt text](https://github.com/estervojko/image-classifier-app/blob/master/image-classifier/wireframes/wireframe2.jpg?raw=true)
+
+**Search Screen**
+
+![alt text](https://github.com/estervojko/image-classifier-app/blob/master/image-classifier/wireframes/wireframe3.jpg?raw=true)
+
+**Search Results Screen**
+
+![alt text](https://github.com/estervojko/image-classifier-app/blob/master/image-classifier/wireframes/wireframe4.jpg?raw=true)
 
 
 ### Challenges
